@@ -2,8 +2,6 @@ import { connectDB } from "./connect-db.js"
 
 
 export async function requestData (id, dbKeycloack) {
-    // Conectar a la base de datos de keycloak
-    await dbKeycloack.connect()
 
     // Consulta para obtener los datos del usuario
     const newUser = await dbKeycloack.query(`
