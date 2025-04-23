@@ -13,7 +13,7 @@ app.use(cors());
 app.post("/db-listener", async (req, res) => {
     try {
         console.info ("Connected to API db-listener")
-        const result = await dbListener(process.env.DB_NAME, channel)
+        const result = await dbListener(process.env.KEYCLOAK_DB_DATABASE, channel)
         res.status(200).send(result.message)
         
     } catch (error) {

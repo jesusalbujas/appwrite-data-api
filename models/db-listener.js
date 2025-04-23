@@ -7,8 +7,9 @@ dotenv.config();
 export async function dbListener(database, channel) {
 
     try {
-        // Cliente de keycloak
+        // Clientes de DB
         const dbKeycloack = connectDB (database)
+        const dbAdempiere = connectDB ()
 
         // Conectar a la BD
         await dbKeycloack.connect();
@@ -20,10 +21,10 @@ export async function dbListener(database, channel) {
         dbKeycloack.on("notification", async (msg) => {
             if (msg.channel === channel) {
                 const payload = JSON.parse(msg.payload);
-                const userData = await requestData (payload.id)
+                const userData = await requestData (payload.id, dbKeycloack)
 
                 // Ennviar los datos a Adempiere
-                await sendData (userData)
+                await sendData (userData, dbAdempiere)
 
                 // Terminar la conexion
                 await dbKeycloack.end()

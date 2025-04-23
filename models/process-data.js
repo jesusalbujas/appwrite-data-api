@@ -1,11 +1,8 @@
 import { connectDB } from "./connect-db.js"
-import dotenv from "dotenv"
 
-dotenv.config()
 
-export async function requestData (id) {
+export async function requestData (id, dbKeycloack) {
     // Conectar a la base de datos de keycloak
-    const dbKeycloack = connectDB (process.env.DB_NAME)
     await dbKeycloack.connect()
 
     // Consulta para obtener los datos del usuario
@@ -21,7 +18,7 @@ export async function requestData (id) {
     const postgresTimestamp = time.toISOString().replace('T', ' ').replace('Z', '+00');
 
     // Procesar SecretData
-    const secretDataObj = JSON.parse(secretData)
+    const secretDataObj = JSON.parse(secretData, dbKeycloack)
     const { value:password, salt: salt } = secretDataObj
 
     // crear un objeto con los datos
@@ -49,10 +46,9 @@ export async function requestData (id) {
     return userData
 }
 
-export async function sendData (userData) {
+export async function sendData (userData, dbAdempiere) {
 
     // Conectar a la base de datos de adempiere
-    const dbAdempiere = connectDB ()
     await dbAdempiere.connect()
     console.log ("Connected to Adempiere database")
 
