@@ -5,7 +5,6 @@
 ## Requisitos
 
 - **Node.js**: v16 o superior.
-- **PostgreSQL**: v12 o superior.
 - Archivo `.env` configurado:
 
 ```ADEMPIERE_DB_NAME="adempiere"
