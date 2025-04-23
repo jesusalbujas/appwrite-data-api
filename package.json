@@ -4,6 +4,7 @@
   "main": "main.js",
   "type": "module",
   "scripts": {
+    "start": "node ./controller/api.js",
     "test": "node --watch ./controller/api.js"
   },
   "author": "Zunigaj1101",
