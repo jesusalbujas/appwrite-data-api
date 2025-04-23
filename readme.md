@@ -1,6 +1,6 @@
 # DB Listener
 
-**DB Listener** es una herramienta para escuchar notificaciones de Keycloak al crear nuevos procesar datos en tiempo real, integrándose con Adempiere.
+**DB Listener** es una herramienta para escuchar notificaciones de Keycloak al crear nuevos usuarios y procesar datos en tiempo real, integrándose con Adempiere.
 
 ## Requisitos
 
