@@ -28,4 +28,4 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: |
-          ${{ secrets.DOCKER_REPO_API }}:${{ github.event.release.tag_name }}
+          jalbujas/adempiere-keycloak-api:${{ github.event.release.tag_name }}
