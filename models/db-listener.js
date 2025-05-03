@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { connectDB } from "./connect-db.js";
 import { requestData, sendData } from "./process-data.js";
+import { triggerValidation } from "./trigger-validation.js";
 
 dotenv.config();
 
@@ -14,6 +15,9 @@ export async function dbListener(database, channel) {
         // Conectar a la BD
         await dbKeycloack.connect();
             console.info (`Connected to ${dbKeycloack.database} database`)
+
+        // Verificar si el canal ya existe
+        await triggerValidation (dbKeycloack)
     
         // Escuchar notificaciones en el canal "new_registered_user"
         await dbKeycloack.query(`LISTEN ${channel}`);
