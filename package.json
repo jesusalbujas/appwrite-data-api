@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node ./controller/api.js",
-    "test": "node --watch ./controller/api.js"
+    "dev": "node --watch ./controller/api.js"
   },
   "author": "Zunigaj1101",
   "license": "ISC",
