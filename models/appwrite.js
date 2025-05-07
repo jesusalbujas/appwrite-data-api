@@ -33,15 +33,20 @@ const getThreads = async (customerQuery) => {
     );
     console.info("Successfully fetched Threads from Appwrite");
 
-    // Devuelve todos los clientes con los campos "clientname" y "clientchannel"
     if (customerQuery) {
       if (customerQuery.toLowerCase() === "all") {
-        return response.documents.map( doc => ({
-          clientname: doc.clientname,
-          clientchannel: doc.clientchannel
-        }));
+        const uniqueMap = new Map();
+        response.documents.forEach(doc => {
+          const key = `${doc.clientname}-${doc.clientchannel}`;
+          if (!uniqueMap.has(key)) {
+            uniqueMap.set(key, {
+              clientname: doc.clientname,
+              clientchannel: doc.clientchannel
+            });
+          }
+        });
+        return Array.from(uniqueMap.values());
       } else {
-        // Busca un cliente específico por "clientname"
         const specificClient = response.documents.find(
           doc => doc.clientname === customerQuery
         );
@@ -49,20 +54,20 @@ const getThreads = async (customerQuery) => {
           return {
             clientname: specificClient.clientname,
             clientchannel: specificClient.clientchannel
-          }
+          };
         } else {
           throw new Error("Client not found");
         }
       }
     }
 
-    // Si no se especifica "customerQuery", devuelve todos los datos completos
     return response.documents;
   } catch (error) {
     console.error('Error fetching threads from Appwrite:', error.message);
     return [];
   }
 };
+
 
 const getTopics = async () => {
   try {
