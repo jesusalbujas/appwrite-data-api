@@ -37,23 +37,26 @@ const getThreads = async (customerQuery) => {
       if (customerQuery.toLowerCase() === "all") {
         const uniqueMap = new Map();
         response.documents.forEach(doc => {
-          const key = `${doc.clientname}-${doc.clientchannel}`;
+          const clientname = doc.clientname?.trim().toUpperCase();
+          const clientchannel = doc.clientchannel?.trim().toUpperCase();
+          const key = `${clientname}-${clientchannel}`;
           if (!uniqueMap.has(key)) {
             uniqueMap.set(key, {
-              clientname: doc.clientname,
-              clientchannel: doc.clientchannel
+              clientname,
+              clientchannel
             });
           }
         });
         return Array.from(uniqueMap.values());
       } else {
-        const specificClient = response.documents.find(
-          doc => doc.clientname === customerQuery
+        const queryName = customerQuery.trim().toUpperCase();
+        const specificClient = response.documents.find(doc =>
+          doc.clientname?.trim().toUpperCase() === queryName
         );
         if (specificClient) {
           return {
-            clientname: specificClient.clientname,
-            clientchannel: specificClient.clientchannel
+            clientname: specificClient.clientname.trim().toUpperCase(),
+            clientchannel: specificClient.clientchannel.trim().toUpperCase()
           };
         } else {
           throw new Error("Client not found");
@@ -67,6 +70,7 @@ const getThreads = async (customerQuery) => {
     return [];
   }
 };
+
 
 
 const getTopics = async () => {
