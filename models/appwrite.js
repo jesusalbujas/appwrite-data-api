@@ -76,11 +76,16 @@ const getTypology = async () => {
 };
 
 
-const getClients = async (customerQuery) => {
+const getClients = async (page, limit, customerQuery) => {
   try {
+    const offset = (page - 1) * limit
     const response = await databases.listDocuments(
       process.env.APPWRITE_DATABASE_ID,
-      process.env.APPWRITE_COLLECTION_ID
+      process.env.APPWRITE_COLLECTION_ID,
+      [
+        `limit(${limit})`,
+        `offset(${offset})`
+      ]
     );
     console.info("Successfully fetched Clients from Appwrite");
 
