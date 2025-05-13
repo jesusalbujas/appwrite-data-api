@@ -40,7 +40,7 @@ app.get("/threads", async (req, res) => {
 app.get("/clients", async (req, res) => {
     try {
         const page = parseInt (req.query.page) || 1;
-        const limit = parseInt (req.query.limit) || 25;
+        const limit = parseInt (req.query.limit) || 10000;
         const clients = await getClients(page, limit);
         res.status(200).json(clients);
     } catch (error) {

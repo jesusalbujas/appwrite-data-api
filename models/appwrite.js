@@ -76,7 +76,7 @@ const getTypology = async () => {
 };
 
 
-const getClients = async (page, limit, customerQuery) => {
+const getClients = async (page, limit) => {
   try {
     const offset = (page - 1) * limit
     const response = await databases.listDocuments(
@@ -88,40 +88,7 @@ const getClients = async (page, limit, customerQuery) => {
       ]
     );
     console.info("Successfully fetched Clients from Appwrite");
-
-    console.info(`Total number of records: ${response.documents.length}`);
-
-    if (customerQuery) {
-      if (customerQuery.toLowerCase() === "all") {
-        const uniqueMap = new Map();
-        response.documents.forEach(doc => {
-          const clientname = doc.clientname?.trim().toUpperCase();
-          const clientchannel = doc.clientchannel?.trim().toUpperCase();
-          const key = `${clientname}-${clientchannel}`;
-          if (!uniqueMap.has(key)) {
-            uniqueMap.set(key, {
-              clientname,
-              clientchannel
-            });
-          }
-        });
-        return Array.from(uniqueMap.values());
-      } else {
-        const queryName = customerQuery.trim().toUpperCase();
-        const specificClient = response.documents.filter(doc =>
-          doc.clientname?.trim().toUpperCase() === queryName
-        );
-        if (specificClient.length > 0) {
-          return {
-            clientname: specificClient[0].clientname.trim().toUpperCase(),
-            clientchannel: specificClient[0].clientchannel.trim().toUpperCase()
-          };
-        } else {
-          throw new Error("Client not found");
-        }
-      }
-    }
-
+    
     const uniqueMap = new Map();
     response.documents.forEach(doc => {
       const clientname = doc.clientname?.trim().toUpperCase();
@@ -134,7 +101,10 @@ const getClients = async (page, limit, customerQuery) => {
         });
       }
     });
-    return Array.from(uniqueMap.values());
+
+    const resultClient = Array.from(uniqueMap.values());
+    console.info(`Total number of records: ${resultClient.length}`);
+    return resultClient
   } catch (error) {
     console.error('Error fetching clients from Appwrite:', error.message);
     return [];
