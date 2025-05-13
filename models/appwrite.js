@@ -1,4 +1,4 @@
-import { Client, Databases } from 'node-appwrite';
+import { Client, Databases, Query } from 'node-appwrite';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -25,7 +25,7 @@ const databases = new Databases(client);
 
 console.log(`Appwrite connected! Endpoint: ${process.env.APPWRITE_ENDPOINT}`);
 
-const getThreads = async (customerQuery) => {
+const getThreads = async () => {
   try {
     const response = await databases.listDocuments(
       process.env.APPWRITE_DATABASE_ID,
@@ -33,45 +33,14 @@ const getThreads = async (customerQuery) => {
     );
     console.info("Successfully fetched Threads from Appwrite");
 
-    if (customerQuery) {
-      if (customerQuery.toLowerCase() === "all") {
-        const uniqueMap = new Map();
-        response.documents.forEach(doc => {
-          const clientname = doc.clientname?.trim().toUpperCase();
-          const clientchannel = doc.clientchannel?.trim().toUpperCase();
-          const key = `${clientname}-${clientchannel}`;
-          if (!uniqueMap.has(key)) {
-            uniqueMap.set(key, {
-              clientname,
-              clientchannel
-            });
-          }
-        });
-        return Array.from(uniqueMap.values());
-      } else {
-        const queryName = customerQuery.trim().toUpperCase();
-        const specificClient = response.documents.find(doc =>
-          doc.clientname?.trim().toUpperCase() === queryName
-        );
-        if (specificClient) {
-          return {
-            clientname: specificClient.clientname.trim().toUpperCase(),
-            clientchannel: specificClient.clientchannel.trim().toUpperCase()
-          };
-        } else {
-          throw new Error("Client not found");
-        }
-      }
-    }
-
+    console.info(`Total number of records: ${response.documents.length}`);
+    
     return response.documents;
   } catch (error) {
     console.error('Error fetching threads from Appwrite:', error.message);
     return [];
   }
 };
-
-
 
 const getTopics = async () => {
   try {
@@ -101,4 +70,65 @@ const getTypology = async () => {
   }
 };
 
-export { getThreads, getTopics, getTypology };
+
+const getClients = async (customerQuery) => {
+  try {
+    const response = await databases.listDocuments(
+      process.env.APPWRITE_DATABASE_ID,
+      process.env.APPWRITE_COLLECTION_ID
+    );
+    console.info("Successfully fetched Clients from Appwrite");
+
+    console.info(`Total number of records: ${response.documents.length}`);
+
+    if (customerQuery) {
+      if (customerQuery.toLowerCase() === "all") {
+        const uniqueMap = new Map();
+        response.documents.forEach(doc => {
+          const clientname = doc.clientname?.trim().toUpperCase();
+          const clientchannel = doc.clientchannel?.trim().toUpperCase();
+          const key = `${clientname}-${clientchannel}`;
+          if (!uniqueMap.has(key)) {
+            uniqueMap.set(key, {
+              clientname,
+              clientchannel
+            });
+          }
+        });
+        return Array.from(uniqueMap.values());
+      } else {
+        const queryName = customerQuery.trim().toUpperCase();
+        const specificClient = response.documents.filter(doc =>
+          doc.clientname?.trim().toUpperCase() === queryName
+        );
+        if (specificClient.length > 0) {
+          return {
+            clientname: specificClient[0].clientname.trim().toUpperCase(),
+            clientchannel: specificClient[0].clientchannel.trim().toUpperCase()
+          };
+        } else {
+          throw new Error("Client not found");
+        }
+      }
+    }
+
+    const uniqueMap = new Map();
+    response.documents.forEach(doc => {
+      const clientname = doc.clientname?.trim().toUpperCase();
+      const clientchannel = doc.clientchannel?.trim().toUpperCase();
+      const key = `${clientname}-${clientchannel}`;
+      if (!uniqueMap.has(key)) {
+        uniqueMap.set(key, {
+          clientname,
+          clientchannel
+        });
+      }
+    });
+    return Array.from(uniqueMap.values());
+  } catch (error) {
+    console.error('Error fetching clients from Appwrite:', error.message);
+    return [];
+  }
+};
+
+export { getThreads, getTopics, getTypology, getClients };

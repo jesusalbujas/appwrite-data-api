@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { dbListener } from "../models/db-listener.js";
 import cors from "cors";
-import { getThreads, getTopics, getTypology } from "../models/appwrite.js";
+import { getThreads, getTopics, getTypology, getClients } from "../models/appwrite.js";
 
 
 dotenv.config();
@@ -33,6 +33,16 @@ app.get("/threads", async (req, res) => {
     } catch (error) {
         console.error("Error fetching threads:", error.message);
         res.status(500).send("Error fetching threads");
+    }
+});
+
+app.get("/clients", async (req, res) => {
+    try {
+        const clients = await getClients();
+        res.status(200).json(clients);
+    } catch (error) {
+        console.error("Error fetching clients:", error.message);
+        res.status(500).send("Error fetching clients");
     }
 });
 
