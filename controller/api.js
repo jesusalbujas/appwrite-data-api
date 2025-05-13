@@ -27,8 +27,9 @@ app.post("/db-listener", async (req, res) => {
 
 app.get("/threads", async (req, res) => {
     try {
-        const customerQuery = req.query.customers ?? null
-        const threads = await getThreads(customerQuery);
+        const page = parseInt(req.query.page) || 1; 
+        const limit = parseInt(req.query.limit) || 25; 
+        const threads = await getThreads(page, limit);
         res.status(200).json(threads);
     } catch (error) {
         console.error("Error fetching threads:", error.message);

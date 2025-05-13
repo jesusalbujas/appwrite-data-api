@@ -25,11 +25,16 @@ const databases = new Databases(client);
 
 console.log(`Appwrite connected! Endpoint: ${process.env.APPWRITE_ENDPOINT}`);
 
-const getThreads = async () => {
+const getThreads = async (page, limit) => {
   try {
+    const offset = (page - 1) * limit;
     const response = await databases.listDocuments(
       process.env.APPWRITE_DATABASE_ID,
-      process.env.APPWRITE_COLLECTION_ID
+      process.env.APPWRITE_COLLECTION_ID, 
+      [
+        `limit(${limit})`,
+        `offset(${offset})`
+      ]
     );
     console.info("Successfully fetched Threads from Appwrite");
 
