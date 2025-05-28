@@ -6,5 +6,5 @@
 
 # Database API Appwrite Integration
 
-API diseñada para interactuar con Appwrite, procesando datos en tiempo real y proporcionando EndPoints REST. Este proyecto está relacionado con [**Dory Bot**](https://github.com/jesusalbujas/dory-bot) (Bot de Discord que administra múltiples tareas).
+An **API** designed for real-time data processing and RESTful endpoint provision, facilitating seamless interaction with **Appwrite**. This project serves as a crucial backend component for [**Dory Bot**](https://github.com/jesusalbujas/dory-bot), a versatile Discord bot capable of managing a wide array of tasks.
 </div>
